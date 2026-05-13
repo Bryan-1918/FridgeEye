@@ -28,6 +28,8 @@
 // ============================================================
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart'; // 👈 agrega esta línea
+import 'dart:io';
 
 // ============================================================
 // PUNTO DE ENTRADA DE LA APP
@@ -92,6 +94,21 @@ class _HomeScreenState extends State<HomeScreen> {
   int _totalAlimentos = 6;
   int _porVencer = 2;
   int _frescos = 4;
+
+  File? _imagenCapturada;
+final ImagePicker _picker = ImagePicker();
+
+Future<void> _abrirCamara() async {
+  final XFile? foto = await _picker.pickImage(
+    source: ImageSource.camera,
+    imageQuality: 80,
+  );
+  if (foto != null) {
+    setState(() {
+      _imagenCapturada = File(foto.path);
+    });
+  }
+}
 
   // ============================================================
   // BUILD — método que construye la UI
@@ -731,13 +748,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           // TODO: navegar a la pantalla de cámara
           // Navigator.push(context, MaterialPageRoute(builder: ...))
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('📸 Abriendo cámara...'),
-              backgroundColor: Color(0xFF2ECC71),
-              duration: Duration(seconds: 2),
-            ),
-          );
+          _abrirCamara();
         },
         // icon: ícono que aparece a la izquierda del texto
         icon: const Icon(Icons.camera_alt_rounded, size: 22),
